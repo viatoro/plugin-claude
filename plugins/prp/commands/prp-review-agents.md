@@ -166,40 +166,40 @@ gh pr comment <PR_NUMBER> --body "<summary>"
 
 ```bash
 # Full review of specific PR
-/prp-review-agents 163
+/prp:prp-review-agents 163
 
 # Review only specific aspects
-/prp-review-agents 163 tests errors
+/prp:prp-review-agents 163 tests errors
 
 # Review current branch's PR
-/prp-review-agents
+/prp:prp-review-agents
 
 # Only code and docs review
-/prp-review-agents 42 code docs
+/prp:prp-review-agents 42 code docs
 
 # All reviews in parallel
-/prp-review-agents 42 all parallel
+/prp:prp-review-agents 42 all parallel
 
 # Just simplify after passing review
-/prp-review-agents 42 simplify
+/prp:prp-review-agents 42 simplify
 ```
 
 ## Workflow Integration
 
 **Before creating PR**:
-1. Run `/prp-review-agents` on current branch
+1. Run `/prp:prp-review-agents` on current branch
 2. Fix critical and important issues
 3. Re-run to verify
 4. Create PR
 
 **During PR review**:
-1. Run `/prp-review-agents <pr-number>`
+1. Run `/prp:prp-review-agents <pr-number>`
 2. Review posts summary to GitHub
 3. Address feedback
 4. Re-run targeted aspects
 
 **After making changes**:
-1. Run specific aspects: `/prp-review-agents <pr-number> tests code`
+1. Run specific aspects: `/prp:prp-review-agents <pr-number> tests code`
 2. Verify issues resolved
 3. Push updates
 

@@ -72,7 +72,7 @@ Ask these questions (present all at once, user can answer together):
 
 After foundation answers, conduct research using specialized agents:
 
-**Use Task tool with `subagent_type="prp-core:web-researcher"`:**
+**Use Task tool with `subagent_type="prp:web-researcher"`:**
 
 ```
 Research the market context for: {product/feature idea}
@@ -86,7 +86,7 @@ FIND:
 Return findings with direct links, key insights, and any gaps in available information.
 ```
 
-**If codebase exists, use Task tool with `subagent_type="prp-core:codebase-explorer"`:**
+**If codebase exists, use Task tool with `subagent_type="prp:codebase-explorer"`:**
 
 ```
 Find existing functionality relevant to: {product/feature idea}
@@ -136,7 +136,7 @@ Based on foundation + research, ask:
 
 **If codebase exists, launch two agents in parallel:**
 
-Use Task tool with `subagent_type="prp-core:codebase-explorer"`:
+Use Task tool with `subagent_type="prp:codebase-explorer"`:
 
 ```
 Assess technical feasibility for: {product/feature}
@@ -150,7 +150,7 @@ LOCATE:
 Return file locations, code patterns, and conventions observed.
 ```
 
-Use Task tool with `subagent_type="prp-core:codebase-analyst"`:
+Use Task tool with `subagent_type="prp:codebase-analyst"`:
 
 ```
 Analyze technical constraints for: {product/feature}
@@ -164,7 +164,7 @@ TRACE:
 Document what exists with precise file:line references. No suggestions.
 ```
 
-**If no codebase, use Task tool with `subagent_type="prp-core:web-researcher"`:**
+**If no codebase, use Task tool with `subagent_type="prp:web-researcher"`:**
 
 ```
 Research technical approaches for: {product/feature}
@@ -414,7 +414,7 @@ After generating, report:
 
 ### To Start Implementation
 
-Run: `/prp-plan .claude/PRPs/prds/{name}.prd.md`
+Run: `/prp:prp-plan .claude/PRPs/prds/{name}.prd.md`
 
 This will automatically select the next pending phase and create an implementation plan.
 ```

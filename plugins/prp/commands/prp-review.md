@@ -136,7 +136,7 @@ ls .claude/PRPs/issues/completed/ 2>/dev/null
 3. Note documented deviations - these are INTENTIONAL, not issues
 
 **If no implementation report:**
-- PR may not have been created via `/prp-implement`
+- PR may not have been created via `/prp:prp-implement`
 - Review normally without plan context
 - Note in review that no implementation report was found
 

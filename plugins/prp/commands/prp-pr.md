@@ -73,6 +73,6 @@ git push origin main
 ## Related Commands
 
 For trunk-based development, use:
-- `/prp-commit` - Quick commit with natural language targeting
-- `/prp-implement` - Execute plans with automatic push to main
-- `/prp-ralph` - Autonomous implementation loops
+- `/prp:prp-commit` - Quick commit with natural language targeting
+- `/prp:prp-implement` - Execute plans with automatic push to main
+- `/prp:prp-ralph` - Autonomous implementation loops

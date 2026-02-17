@@ -12,25 +12,25 @@ This plugin provides a comprehensive workflow for creating, executing, and shipp
 
 | Command | Description |
 |---------|-------------|
-| `/prp-prd` | Interactive PRD generator with implementation phases |
-| `/prp-plan` | Create implementation plan (from PRD or free-form input) |
-| `/prp-implement` | Execute a plan with validation loops |
+| `/prp:prp-prd` | Interactive PRD generator with implementation phases |
+| `/prp:prp-plan` | Create implementation plan (from PRD or free-form input) |
+| `/prp:prp-implement` | Execute a plan with validation loops |
 
 ### Issue Workflow
 
 | Command | Description |
 |---------|-------------|
-| `/prp-issue-investigate` | Analyze GitHub issue, create implementation plan |
-| `/prp-issue-fix` | Execute fix from investigation artifact |
+| `/prp:prp-issue-investigate` | Analyze GitHub issue, create implementation plan |
+| `/prp:prp-issue-fix` | Execute fix from investigation artifact |
 
 ### Git & Review
 
 | Command | Description |
 |---------|-------------|
-| `/prp-commit` | Smart commit with natural language file targeting |
-| `/prp-pr` | Create PR with template support |
-| `/prp-review` | Comprehensive PR code review |
-| `/prp-review-agents` | Multi-agent PR review (comments, tests, errors, types, code, docs, simplify) |
+| `/prp:prp-commit` | Smart commit with natural language file targeting |
+| `/prp:prp-pr` | Create PR with template support |
+| `/prp:prp-review` | Comprehensive PR code review |
+| `/prp:prp-review-agents` | Multi-agent PR review (comments, tests, errors, types, code, docs, simplify) |
 
 ## Agents
 
@@ -58,11 +58,11 @@ Specialized agents for code analysis and review workflows.
 
 ### Using Agents
 
-Agents are invoked automatically by `/prp-review-agents` or manually via Task tool:
+Agents are invoked automatically by `/prp:prp-review-agents` or manually via Task tool:
 
 ```
-/prp-review-agents 123              # Full review of PR #123
-/prp-review-agents 123 tests errors # Specific aspects only
+/prp:prp-review-agents 123              # Full review of PR #123
+/prp:prp-review-agents 123 tests errors # Specific aspects only
 ```
 
 ## Workflow
@@ -70,35 +70,35 @@ Agents are invoked automatically by `/prp-review-agents` or manually via Task to
 ### Large Features: PRD → Plan → Implement
 
 ```
-/prp-prd "user authentication system"
+/prp:prp-prd "user authentication system"
     ↓
 Creates PRD with Implementation Phases table
     ↓
-/prp-plan .claude/PRPs/prds/user-auth.prd.md
+/prp:prp-plan .claude/PRPs/prds/user-auth.prd.md
     ↓
 Auto-selects next pending phase, creates plan
     ↓
-/prp-implement .claude/PRPs/plans/user-auth-phase-1.plan.md
+/prp:prp-implement .claude/PRPs/plans/user-auth-phase-1.plan.md
     ↓
 Executes plan, updates PRD progress, archives plan
     ↓
-Repeat /prp-plan for next phase
+Repeat /prp:prp-plan for next phase
 ```
 
 ### Medium Features: Direct to Plan
 
 ```
-/prp-plan "add pagination to the API"
+/prp:prp-plan "add pagination to the API"
     ↓
-/prp-implement .claude/PRPs/plans/add-pagination.plan.md
+/prp:prp-implement .claude/PRPs/plans/add-pagination.plan.md
 ```
 
 ### Bug Fixes: Issue Workflow
 
 ```
-/prp-issue-investigate 123
+/prp:prp-issue-investigate 123
     ↓
-/prp-issue-fix 123
+/prp:prp-issue-fix 123
 ```
 
 ## Installation

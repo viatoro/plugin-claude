@@ -41,11 +41,11 @@ Extract from input:
 Ralph requires a PRP plan or PRD file.
 
 Create one first:
-  /prp-plan "your feature description"   # Creates plan from description
-  /prp-prd "your product idea"           # Creates PRD with phases
+  /prp:prp-plan "your feature description"   # Creates plan from description
+  /prp:prp-prd "your product idea"           # Creates PRD with phases
 
 Then run:
-  /prp-ralph .claude/PRPs/plans/your-feature.plan.md --max-iterations 20
+  /prp:prp-ralph .claude/PRPs/plans/your-feature.plan.md --max-iterations 20
 ```
 
 ### 1.3 Verify File Exists
@@ -133,7 +133,7 @@ The stop hook is now active. When you try to exit:
 - If all validations pass → loop exits
 
 To monitor: `cat .claude/prp-ralph.state.md`
-To cancel: `/prp-ralph-cancel`
+To cancel: `/prp:prp-ralph-cancel`
 
 ---
 

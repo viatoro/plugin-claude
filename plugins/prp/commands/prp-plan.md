@@ -11,9 +11,9 @@ Transform "$ARGUMENTS" into a battle-tested implementation plan through systemat
 **Execution Order**: CODEBASE FIRST, RESEARCH SECOND. Solutions must fit existing patterns before introducing new ones.
 
 **Agent Strategy**: Use specialized agents for intelligence gathering:
-- `prp-core:codebase-explorer` — finds WHERE code lives and extracts implementation patterns
-- `prp-core:codebase-analyst` — analyzes HOW integration points work and traces data flow
-- `prp-core:web-researcher` — strategic web research with citations and gap analysis
+- `prp:codebase-explorer` — finds WHERE code lives and extracts implementation patterns
+- `prp:codebase-analyst` — analyzes HOW integration points work and traces data flow
+- `prp:web-researcher` — strategic web research with citations and gap analysis
 
 Launch codebase agents in parallel first, then research agent second.
 </objective>
@@ -123,11 +123,11 @@ So that <benefit/value>
 
 **CRITICAL: Launch two specialized agents in parallel using multiple Task tool calls in a single message.**
 
-### Agent 1: `prp-core:codebase-explorer`
+### Agent 1: `prp:codebase-explorer`
 
 Finds WHERE code lives and extracts implementation patterns.
 
-Use Task tool with `subagent_type="prp-core:codebase-explorer"`:
+Use Task tool with `subagent_type="prp:codebase-explorer"`:
 
 ```
 Find all code relevant to implementing: [feature description].
@@ -146,11 +146,11 @@ Categorize findings by purpose (implementation, tests, config, types, docs).
 Return ACTUAL code snippets from codebase, not generic examples.
 ```
 
-### Agent 2: `prp-core:codebase-analyst`
+### Agent 2: `prp:codebase-analyst`
 
 Analyzes HOW integration points work and traces data flow.
 
-Use Task tool with `subagent_type="prp-core:codebase-analyst"`:
+Use Task tool with `subagent_type="prp:codebase-analyst"`:
 
 ```
 Analyze the implementation details relevant to: [feature description].
@@ -180,7 +180,7 @@ Combine findings from both agents into a unified discovery table:
 
 **PHASE_2_CHECKPOINT:**
 
-- [ ] Both agents (`prp-core:codebase-explorer` and `prp-core:codebase-analyst`) launched in parallel and completed
+- [ ] Both agents (`prp:codebase-explorer` and `prp:codebase-analyst`) launched in parallel and completed
 - [ ] At least 3 similar implementations found with file:line refs
 - [ ] Code snippets are ACTUAL (copy-pasted from codebase, not invented)
 - [ ] Integration points mapped with data flow traces
@@ -192,7 +192,7 @@ Combine findings from both agents into a unified discovery table:
 
 **ONLY AFTER Phase 2 is complete** - solutions must fit existing codebase patterns first.
 
-**Use Task tool with `subagent_type="prp-core:web-researcher"`:**
+**Use Task tool with `subagent_type="prp:web-researcher"`:**
 
 ```
 Research external documentation relevant to implementing: [feature description].
@@ -225,7 +225,7 @@ Return findings with:
 
 **PHASE_3_CHECKPOINT:**
 
-- [ ] `prp-core:web-researcher` agent launched and completed
+- [ ] `prp:web-researcher` agent launched and completed
 - [ ] Documentation versions match package.json
 - [ ] URLs include specific section anchors (not just homepage)
 - [ ] Gotchas documented with mitigation strategies
@@ -292,9 +292,9 @@ Return findings with:
 
 ## Phase 5: ARCHITECT - Strategic Design
 
-**For complex features with multiple integration points**, use `prp-core:codebase-analyst` to trace how existing architecture works at the integration points identified in Phase 2:
+**For complex features with multiple integration points**, use `prp:codebase-analyst` to trace how existing architecture works at the integration points identified in Phase 2:
 
-Use Task tool with `subagent_type="prp-core:codebase-analyst"`:
+Use Task tool with `subagent_type="prp:codebase-analyst"`:
 
 ```
 Analyze the architecture around these integration points for: [feature description].
@@ -746,7 +746,7 @@ To start parallel work: Implement in small commits, pull frequently, use feature
 **Confidence Score**: {1-10}/10 for one-pass implementation success
 - {Rationale for score}
 
-**Next Step**: To execute, run: `/prp-implement .claude/PRPs/plans/{feature-name}.plan.md`
+**Next Step**: To execute, run: `/prp:prp-implement .claude/PRPs/plans/{feature-name}.plan.md`
 ````
 
 </output>
@@ -756,7 +756,7 @@ To start parallel work: Implement in small commits, pull frequently, use feature
 
 **CONTEXT_COMPLETENESS:**
 
-- [ ] All patterns from `prp-core:codebase-explorer` and `prp-core:codebase-analyst` documented with file:line references
+- [ ] All patterns from `prp:codebase-explorer` and `prp:codebase-analyst` documented with file:line references
 - [ ] External docs versioned to match package.json
 - [ ] Integration points mapped with specific file paths
 - [ ] Gotchas captured with mitigation strategies
@@ -793,7 +793,7 @@ To start parallel work: Implement in small commits, pull frequently, use feature
 </verification>
 
 <success_criteria>
-**CONTEXT_COMPLETE**: All patterns, gotchas, integration points documented from actual codebase via `prp-core:codebase-explorer` and `prp-core:codebase-analyst` agents
+**CONTEXT_COMPLETE**: All patterns, gotchas, integration points documented from actual codebase via `prp:codebase-explorer` and `prp:codebase-analyst` agents
 **IMPLEMENTATION_READY**: Tasks executable top-to-bottom without questions, research, or clarification
 **PATTERN_FAITHFUL**: Every new file mirrors existing codebase style exactly
 **VALIDATION_DEFINED**: Every task has executable verification command

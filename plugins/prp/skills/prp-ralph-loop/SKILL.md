@@ -342,7 +342,7 @@ Archive format:
 
 ### Starting a Ralph Loop
 
-User invokes: `/prp-ralph [plan.md] --max-iterations N`
+User invokes: `/prp:prp-ralph [plan.md] --max-iterations N`
 
 The command:
 1. Creates the state file
@@ -351,7 +351,7 @@ The command:
 
 ### Canceling a Ralph Loop
 
-User invokes: `/prp-ralph-cancel`
+User invokes: `/prp:prp-ralph-cancel`
 
 This:
 1. Removes the state file

@@ -13,7 +13,7 @@ argument-hint: <issue-number|url|"description">
 
 Investigate the issue/problem and produce a comprehensive implementation plan that:
 
-1. Can be executed by `/prp-issue-fix`
+1. Can be executed by `/prp:prp-issue-fix`
 2. Is posted as a GitHub comment (if GH issue provided)
 3. Captures all context needed for one-pass implementation
 
@@ -114,11 +114,11 @@ Each assessment requires a **one-sentence reasoning** explaining WHY you chose t
 
 **CRITICAL: Launch two specialized agents in parallel using multiple Task tool calls in a single message.**
 
-### 2.1 Agent 1: `prp-core:codebase-explorer`
+### 2.1 Agent 1: `prp:codebase-explorer`
 
 Finds WHERE relevant code lives and extracts patterns to mirror.
 
-Use Task tool with `subagent_type="prp-core:codebase-explorer"`:
+Use Task tool with `subagent_type="prp:codebase-explorer"`:
 
 ```
 Find all code relevant to this issue:
@@ -136,11 +136,11 @@ Categorize findings by purpose (implementation, tests, config, types, docs).
 Return ACTUAL code snippets from codebase, not generic examples.
 ```
 
-### 2.2 Agent 2: `prp-core:codebase-analyst`
+### 2.2 Agent 2: `prp:codebase-analyst`
 
 Analyzes HOW the affected code works and traces data flow for root cause analysis.
 
-Use Task tool with `subagent_type="prp-core:codebase-analyst"`:
+Use Task tool with `subagent_type="prp:codebase-analyst"`:
 
 ```
 Analyze the implementation details related to this issue:
@@ -170,7 +170,7 @@ Document what exists with precise file:line references. No suggestions.
 
 **PHASE_2_CHECKPOINT:**
 
-- [ ] Both agents (`prp-core:codebase-explorer` and `prp-core:codebase-analyst`) launched in parallel and completed
+- [ ] Both agents (`prp:codebase-explorer` and `prp:codebase-analyst`) launched in parallel and completed
 - [ ] Core files identified with line numbers
 - [ ] Integration points mapped with data flow traces
 - [ ] Similar patterns found to mirror
@@ -528,7 +528,7 @@ gh issue comment {number} --body "$(cat <<'EOF'
 
 ### Next Step
 
-To implement: `/prp-issue-fix {number}`
+To implement: `/prp:prp-issue-fix {number}`
 
 ---
 
@@ -583,7 +583,7 @@ EOF
 
 ### Next Step
 
-Run `/prp-issue-fix {number}` to execute the plan.
+Run `/prp:prp-issue-fix {number}` to execute the plan.
 ````
 
 ---

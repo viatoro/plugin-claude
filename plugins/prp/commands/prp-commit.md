@@ -69,7 +69,7 @@ git commit -m "{type}: {description}"
 **Committed**: {hash} - {message}
 **Files**: {count} files (+{add}/-{del})
 
-Next: `git push` or `/prp-pr`
+Next: `git push` or `/prp:prp-pr`
 ```
 
 ---
@@ -77,9 +77,9 @@ Next: `git push` or `/prp-pr`
 ## Examples
 
 ```
-/prp-commit                          # All changes
-/prp-commit typescript files         # *.ts only
-/prp-commit except package-lock      # Exclude specific
-/prp-commit only the new files       # Untracked only
-/prp-commit staged                   # Already-staged only
+/prp:prp-commit                          # All changes
+/prp:prp-commit typescript files         # *.ts only
+/prp:prp-commit except package-lock      # Exclude specific
+/prp:prp-commit only the new files       # Untracked only
+/prp:prp-commit staged                   # Already-staged only
 ```

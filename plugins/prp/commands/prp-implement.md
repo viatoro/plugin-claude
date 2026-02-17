@@ -75,7 +75,7 @@ Locate and understand:
 ```
 Error: Plan not found at $ARGUMENTS
 
-Create a plan first: /prp-plan "feature description"
+Create a plan first: /prp:prp-plan "feature description"
 ```
 
 **PHASE_1_CHECKPOINT:**
@@ -458,13 +458,13 @@ mv $ARGUMENTS .claude/PRPs/plans/completed/
 **Next Phase**: {next pending phase, or "All phases complete!"}
 {If next phase can parallel: "Note: Phase {X} can also start now (parallel)"}
 
-To continue: `/prp-plan {prd-path}`
+To continue: `/prp:prp-plan {prd-path}`
 
 ### Next Steps
 
 1. Review the report (especially if deviations noted)
 2. Push to main: `git push origin main`
-{If more phases: "3. Continue with next phase: `/prp-plan {prd-path}`"}
+{If more phases: "3. Continue with next phase: `/prp:prp-plan {prd-path}`"}
 ```
 
 ---

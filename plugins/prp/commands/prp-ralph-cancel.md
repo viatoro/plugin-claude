@@ -45,6 +45,6 @@ description: Cancel active PRP Ralph loop
    - Git commits (if any were made)
 
    To resume later:
-   - Run `/prp-ralph {plan_path}` to start fresh
-   - Or continue manually with `/prp-implement {plan_path}`
+   - Run `/prp:prp-ralph {plan_path}` to start fresh
+   - Or continue manually with `/prp:prp-implement {plan_path}`
    ```
