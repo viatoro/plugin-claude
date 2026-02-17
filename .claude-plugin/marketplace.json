@@ -1,0 +1,18 @@
+{
+  "name": "viatoro-plugins",
+  "owner": {
+    "name": "Your Name"
+  },
+  "plugins": [
+    {
+      "name": "review-plugin",
+      "source": "./plugins/review-plugin",
+      "description": "Adds a /review skill for quick code reviews"
+    },
+    {
+      "name": "prp",
+      "source": "./plugins/prp",
+      "description": "Complete PRP workflow automation - create, execute, commit, and PR commands with orchestration scripts"
+    }
+  ]
+}
