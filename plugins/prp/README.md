@@ -23,6 +23,12 @@ This plugin provides a comprehensive workflow for creating, executing, and shipp
 | `/prp:prp-issue-investigate` | Analyze GitHub issue, create implementation plan |
 | `/prp:prp-issue-fix` | Execute fix from investigation artifact |
 
+### Testing
+
+| Command | Description |
+|---------|-------------|
+| `/prp:prp-e2e` | Generate and run E2E tests with multi-action user flows |
+
 ### Git & Review (Trunk-Based)
 
 | Command | Description |
