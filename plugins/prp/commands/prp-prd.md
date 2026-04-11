@@ -374,14 +374,135 @@ When {situation}, I want to {motivation}, so I can {outcome}.
 
 ---
 
-## Phase 8: OUTPUT - Summary
+## Phase 8: VERIFY - Validate PRD Against Reality
 
-After generating, report:
+After generating the PRD, run verification checks to ensure accuracy.
+
+### 8.1 Content Completeness
+
+Scan the generated PRD:
+
+| Section | Check | Status |
+|---------|-------|--------|
+| Problem Statement | Specific, has "who" and "cost"? | ✅/❌ |
+| Evidence | Real data, not assumptions? Any "TBD"? | ✅/⚠️ |
+| Key Hypothesis | Measurable outcome? Testable? | ✅/❌ |
+| Success Metrics | Specific numbers? Measurement method? | ✅/❌ |
+| Primary User | Concrete role, not "users"? | ✅/❌ |
+| JTBD | All three parts filled? | ✅/❌ |
+| MoSCoW | Rationale for every priority? | ✅/❌ |
+| MVP Scope | Bounded? Ties to hypothesis? | ✅/❌ |
+| Technical Risks | At least 1 risk? Mitigations? | ✅/❌ |
+| Implementation Phases | Dependencies make sense? | ✅/❌ |
+| Open Questions | Listed honestly? | ✅/❌ |
+
+**Score**: {N}/11 sections complete
+
+### 8.2 Codebase Verification (if project exists)
+
+**Use Task tool with `subagent_type="prp:codebase-explorer"`:**
+
+```
+Verify these claims from the PRD against the actual codebase:
+
+1. Do the integration points in "Technical Approach" exist?
+2. Are referenced patterns/files real and current?
+3. Do implementation phases map to real modules?
+4. Are there constraints NOT mentioned in the PRD?
+5. Is the feasibility rating realistic?
+
+Return: each claim → CONFIRMED / WRONG / OUTDATED with file:line.
+```
+
+| PRD Claim | Codebase Reality | Status |
+|-----------|-----------------|--------|
+| {claim} | {finding with file:line} | ✅/❌/⚠️ |
+
+### 8.3 Live App Verification (if app running, via MCP)
+
+Check if app is accessible:
+
+```bash
+curl -s -o /dev/null -w "%{http_code}" http://localhost:3000 2>/dev/null || echo "NOT_RUNNING"
+```
+
+**If running, use Playwright MCP or Chrome DevTools MCP:**
+
+```
+For each step in the PRD's "User Flow" section:
+  → browser_navigate to the relevant page
+  → browser_snapshot
+  → CHECK: Does this page exist?
+  → CHECK: Can the user reach it from previous step?
+  → CHECK: Are assumed UI elements present?
+```
+
+| PRD Flow Step | UI Reality | Status |
+|---------------|-----------|--------|
+| {step from PRD} | {what actually exists} | ✅ Exists / 🆕 New / ❌ Wrong |
+
+### 8.4 Market Verification
+
+**Use Task tool with `subagent_type="prp:web-researcher"`:**
+
+```
+Verify the market claims in this PRD:
+1. Do referenced competitors exist and have stated features?
+2. Are market trends cited still current?
+3. Any recent changes that invalidate the approach?
+
+Return: each claim → CONFIRMED / OUTDATED / WRONG with sources.
+```
+
+### 8.5 Append Verification Report to PRD
+
+Add to end of the generated PRD file:
 
 ```markdown
-## PRD Created
+---
+
+## Verification Report
+
+**Verified**: {timestamp}
+
+### Results
+
+| Category | Score | Details |
+|----------|-------|---------|
+| Content | {N}/11 | {issues if any} |
+| Codebase | {N}/{total} confirmed | {wrong claims if any} |
+| Live App | {N}/{total} verified | {or "N/A — app not running"} |
+| Market | {N}/{total} confirmed | {outdated claims if any} |
+
+### Issues Found
+
+| # | Severity | Issue | Action |
+|---|----------|-------|--------|
+| 1 | {HIGH/MED/LOW} | {description} | {fix needed} |
+
+### Status: {VERIFIED / NEEDS REVISION / DRAFT}
+```
+
+**PHASE_8_CHECKPOINT:**
+
+- [ ] Content completeness checked (11 sections)
+- [ ] Codebase claims verified (if applicable)
+- [ ] Live app flow verified via MCP (if running)
+- [ ] Market claims verified
+- [ ] Verification report appended to PRD
+- [ ] Status determined
+
+---
+
+## Phase 9: OUTPUT - Summary
+
+After generating and verifying, report:
+
+```markdown
+## PRD Created & Verified
 
 **File**: `.claude/PRPs/prds/{name}.prd.md`
+**Status**: {VERIFIED / NEEDS REVISION / DRAFT}
 
 ### Summary
 
@@ -389,22 +510,25 @@ After generating, report:
 **Solution**: {One line}
 **Key Metric**: {Primary success metric}
 
-### Validation Status
+### Verification Results
 
-| Section | Status |
-|---------|--------|
-| Problem Statement | {Validated/Assumption} |
-| User Research | {Done/Needed} |
-| Technical Feasibility | {Assessed/TBD} |
-| Success Metrics | {Defined/Needs refinement} |
+| Check | Result |
+|-------|--------|
+| Content completeness | {N}/11 ✅ |
+| Codebase accuracy | {N}/{total} confirmed |
+| Live app flow | {CONFIRMED / PARTIAL / N/A} |
+| Market claims | {N}/{total} confirmed |
+| Issues found | {count} |
+
+### Issues to Address (if any)
+
+| # | Issue | Action |
+|---|-------|--------|
+| 1 | {issue} | {action} |
 
 ### Open Questions ({count})
 
 {List the open questions that need answers}
-
-### Recommended Next Step
-
-{One of: user research, technical spike, prototype, stakeholder review, etc.}
 
 ### Implementation Phases
 
@@ -412,11 +536,16 @@ After generating, report:
 |---|-------|--------|--------------|
 {Table of phases from PRD}
 
-### To Start Implementation
+### Next Steps
 
+{If VERIFIED:}
 Run: `/prp:prp-plan .claude/PRPs/prds/{name}.prd.md`
 
-This will automatically select the next pending phase and create an implementation plan.
+{If NEEDS REVISION:}
+Address {N} issues above, then re-verify
+
+{If DRAFT:}
+Fill TBD sections, revisit with stakeholders
 ```
 
 ---
@@ -451,6 +580,10 @@ This will automatically select the next pending phase and create an implementati
 ┌─────────────────────────────────────────────────────────┐
 │  GENERATE: Write PRD to .claude/PRPs/prds/              │
 └─────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────┐
+│  VERIFY: Content + Codebase + Live App + Market checks  │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -463,3 +596,4 @@ This will automatically select the next pending phase and create an implementati
 - **SCOPE_BOUNDED**: Clear must-haves and explicit out-of-scope
 - **QUESTIONS_ACKNOWLEDGED**: Uncertainties are listed, not hidden
 - **ACTIONABLE**: A skeptic could understand why this is worth building
+- **VERIFIED**: Claims checked against codebase, live app, and market

@@ -283,15 +283,114 @@ Run any edge case tests specified in the plan.
 
 ---
 
-## Phase 5: REPORT - Create Implementation Report
+## Phase 5: VERIFY - Confirm Code Actually Works
 
-### 5.1 Create Report Directory
+After all static validation passes, verify the implementation works live.
+
+### 5.1 Start Dev Server
+
+```bash
+{runner} run dev &
+DEV_PID=$!
+sleep 5
+
+# Verify server started
+curl -s -o /dev/null -w "%{http_code}" http://localhost:{port}
+```
+
+### 5.2 Backend Verification (if API changes)
+
+For each new/modified endpoint:
+
+```bash
+# Test each endpoint from the plan
+curl -s http://localhost:{port}/{endpoint} | jq .
+
+# Check response status and shape
+curl -s -w "\n%{http_code}" http://localhost:{port}/{endpoint}
+```
+
+| Endpoint | Method | Expected | Actual | Status |
+|----------|--------|----------|--------|--------|
+| {/api/resource} | GET | 200 + list | {actual} | ✅/❌ |
+| {/api/resource} | POST | 201 + created | {actual} | ✅/❌ |
+| {/api/resource/:id} | PUT | 200 + updated | {actual} | ✅/❌ |
+| {/api/resource/:id} | DELETE | 204 | {actual} | ✅/❌ |
+
+### 5.3 UI Verification (if UI changes, via MCP)
+
+Use Playwright MCP or Chrome DevTools MCP to walk through each new feature:
+
+```
+For each UI change in the plan:
+  → browser_navigate url="{base-url}{page}"
+  → browser_snapshot
+  → CHECK: new elements render correctly
+  → browser_click / browser_fill (interact with new feature)
+  → browser_snapshot
+  → CHECK: feature responds as expected
+  → CHECK: no console errors (browser_console_messages)
+```
+
+| UI Feature | Action | Expected | Actual | Status |
+|-----------|--------|----------|--------|--------|
+| {new page/component} | Navigate | Renders | {actual} | ✅/❌ |
+| {form/input} | Fill + submit | Success toast | {actual} | ✅/❌ |
+| {list/table} | Load | Shows data | {actual} | ✅/❌ |
+
+### 5.4 Error Handling Verification
+
+Test that error paths work correctly:
+
+```bash
+# Test invalid input
+curl -s -X POST http://localhost:{port}/{endpoint} -d '{}' | jq .
+# Expected: 400 with validation error
+
+# Test not found
+curl -s http://localhost:{port}/{endpoint}/nonexistent | jq .
+# Expected: 404 with error message
+
+# Test unauthorized (if applicable)
+curl -s http://localhost:{port}/{endpoint} -H "Authorization: invalid" | jq .
+# Expected: 401/403
+```
+
+### 5.5 Cleanup
+
+```bash
+kill $DEV_PID 2>/dev/null
+```
+
+### 5.6 Verification Results
+
+| Category | Checks | Passed | Status |
+|----------|--------|--------|--------|
+| Backend endpoints | {N} | {N} | ✅/❌ |
+| UI features | {N} | {N} | ✅/❌/N/A |
+| Error handling | {N} | {N} | ✅/❌ |
+| Console errors | - | {count} | ✅/⚠️ |
+
+**PHASE_5_CHECKPOINT:**
+
+- [ ] Dev server starts without error
+- [ ] All new endpoints respond correctly
+- [ ] UI features render and interact properly (if applicable)
+- [ ] Error paths return appropriate responses
+- [ ] No console errors
+- [ ] Server stopped cleanly
+
+---
+
+## Phase 6: REPORT - Create Implementation Report
+
+### 6.1 Create Report Directory
 
 ```bash
 mkdir -p .claude/PRPs/reports
 ```
 
-### 5.2 Generate Report
+### 6.2 Generate Report
 
 **Path**: `.claude/PRPs/reports/{plan-name}-report.md`
 
@@ -382,7 +481,7 @@ Compare the original investigation's assessment with what actually happened:
 - [ ] Push to main: `git push origin main`
 ```
 
-### 5.3 Update Source PRD (if applicable)
+### 6.3 Update Source PRD (if applicable)
 
 **Check if plan was generated from a PRD:**
 - Look in the plan file for `Source PRD:` reference
@@ -396,14 +495,14 @@ Compare the original investigation's assessment with what actually happened:
    - Change Status from `in-progress` to `complete`
 4. Save the PRD
 
-### 5.4 Archive Plan
+### 6.4 Archive Plan
 
 ```bash
 mkdir -p .claude/PRPs/plans/completed
 mv $ARGUMENTS .claude/PRPs/plans/completed/
 ```
 
-**PHASE_5_CHECKPOINT:**
+**PHASE_6_CHECKPOINT:**
 
 - [ ] Report created at `.claude/PRPs/reports/`
 - [ ] PRD updated (if applicable) - phase marked complete
@@ -411,7 +510,7 @@ mv $ARGUMENTS .claude/PRPs/plans/completed/
 
 ---
 
-## Phase 6: OUTPUT - Report to User
+## Phase 7: OUTPUT - Report to User
 
 ```markdown
 ## Implementation Complete
@@ -428,6 +527,15 @@ mv $ARGUMENTS .claude/PRPs/plans/completed/
 | Lint       | ✅              |
 | Tests      | ✅ ({N} passed) |
 | Build      | ✅              |
+
+### Live Verification
+
+| Check | Result |
+|-------|--------|
+| Backend endpoints | ✅ {N}/{total} |
+| UI features | ✅ {N}/{total} / N/A |
+| Error handling | ✅ {N}/{total} |
+| Console errors | {count} |
 
 ### Files Changed
 

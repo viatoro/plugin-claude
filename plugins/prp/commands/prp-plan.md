@@ -743,10 +743,27 @@ To start parallel work: Implement in small commits, pull frequently, use feature
 **Risks**:
 - {Primary risk}: {mitigation}
 
+**Verification**:
+
+| Check | Result |
+|-------|--------|
+| Static (files, imports, deps) | {N}/{total} ✅ |
+| Runtime (server, endpoints, UI) | {N}/{total} ✅ / N/A |
+| Plan quality | {N}/{total} ✅ |
+| Issues | {count} ({blocking count} blocking) |
+| Status | {VERIFIED / BLOCKED / NEEDS FIXES} |
+
 **Confidence Score**: {1-10}/10 for one-pass implementation success
 - {Rationale for score}
 
-**Next Step**: To execute, run: `/prp:prp-implement .claude/PRPs/plans/{feature-name}.plan.md`
+{If VERIFIED:}
+**Next Step**: `/prp:prp-implement .claude/PRPs/plans/{feature-name}.plan.md`
+
+{If BLOCKED:}
+**Next Step**: Fix {N} blocking issues before implementing
+
+{If NEEDS FIXES:}
+**Next Step**: Address issues for higher confidence, or proceed with caution
 ````
 
 </output>
@@ -792,6 +809,158 @@ To start parallel work: Implement in small commits, pull frequently, use feature
 **NO_PRIOR_KNOWLEDGE_TEST**: Could an agent unfamiliar with this codebase implement using ONLY the plan?
 </verification>
 
+<verify>
+## Phase 7: VERIFY - Confirm Plan is Buildable
+
+After generating the plan, verify it against reality before handing off to implementation.
+
+### 7.1 Static Checks (no server needed)
+
+| Check | How | Status |
+|-------|-----|--------|
+| Files to Change exist | `ls` each UPDATE file in plan | ✅/❌ |
+| CREATE parent dirs exist | `ls` parent directory of each CREATE file | ✅/❌ |
+| Mirror files exist | `ls` each MIRROR reference | ✅/❌ |
+| Mirror code matches | Read each MIRROR file, compare to snippet in plan | ✅/⚠️ Drifted |
+| Imports resolve | Check each import path exists | ✅/❌ |
+| Dependencies installed | Check `package.json` for libraries plan assumes | ✅/❌ Missing |
+| Env vars available | Check `.env` / `.env.example` for required vars | ✅/❌ Missing |
+| Validation commands exist | Dry-run each command (`--help` or parse) | ✅/❌ |
+| Test utils available | Check test helpers/frameworks referenced in plan | ✅/❌ |
+| Task dependency order | Verify no task depends on a later task | ✅/❌ |
+| No circular deps | Check task graph for cycles | ✅/❌ |
+
+```bash
+# Quick static verification script
+# Check each file in "Files to Change" table
+for file in {list of UPDATE files}; do
+  test -f "$file" && echo "✅ $file" || echo "❌ $file NOT FOUND"
+done
+
+# Check each MIRROR reference
+for mirror in {list of MIRROR files}; do
+  test -f "$mirror" && echo "✅ $mirror" || echo "❌ $mirror NOT FOUND"
+done
+
+# Check validation commands exist
+{runner} run type-check --help 2>/dev/null && echo "✅ type-check" || echo "❌ type-check not found"
+{runner} run lint --help 2>/dev/null && echo "✅ lint" || echo "❌ lint not found"
+{runner} test --help 2>/dev/null && echo "✅ test" || echo "❌ test not found"
+```
+
+### 7.2 Runtime Checks (start dev server)
+
+Check if app is runnable:
+
+```bash
+# Start dev server in background
+{runner} run dev &
+DEV_PID=$!
+sleep 5
+
+# Check server started
+curl -s -o /dev/null -w "%{http_code}" http://localhost:{port} 2>/dev/null
+```
+
+**If server starts, verify integration points:**
+
+| Check | How | Status |
+|-------|-----|--------|
+| Dev server starts | `{runner} run dev` exits cleanly | ✅/❌ |
+| API endpoints respond | `curl` each existing endpoint in plan | ✅/❌ |
+| UI pages render | MCP navigate to each page referenced in plan | ✅/❌ |
+| No console errors | MCP check console messages on target pages | ✅/⚠️ |
+| Ports available | `lsof -i :{port}` | ✅/❌ Conflict |
+
+**Playwright MCP verification:**
+
+```
+For each page/route referenced in plan:
+  → browser_navigate url="{base-url}{route}"
+  → browser_snapshot
+  → CHECK: page renders without error
+  → CHECK: elements referenced in plan exist
+  → CHECK: no console errors
+```
+
+**After checks:**
+
+```bash
+# Stop dev server
+kill $DEV_PID 2>/dev/null
+```
+
+### 7.3 Plan Quality Checks
+
+| Check | Criteria | Status |
+|-------|----------|--------|
+| Every task has validation | All tasks have VALIDATE step | ✅/❌ |
+| No placeholder content | No `{placeholder}` or `TBD` text | ✅/❌ |
+| Code snippets are real | Mirror snippets match actual file content | ✅/⚠️ |
+| Estimated scope realistic | File count matches task count | ✅/⚠️ |
+| Acceptance criteria testable | Each criterion has executable check | ✅/❌ |
+
+### 7.4 Append Verification Report to Plan
+
+Add to end of the generated plan file:
+
+```markdown
+---
+
+## Verification Report
+
+**Verified**: {timestamp}
+
+### Static Checks
+
+| Check | Result |
+|-------|--------|
+| Files exist | {N}/{total} ✅ |
+| Mirror refs valid | {N}/{total} ✅ |
+| Imports resolve | {N}/{total} ✅ |
+| Dependencies available | {N}/{total} ✅ |
+| Validation commands work | {N}/{total} ✅ |
+
+### Runtime Checks
+
+| Check | Result |
+|-------|--------|
+| Dev server starts | ✅/❌/N/A |
+| API endpoints respond | {N}/{total} ✅ |
+| UI pages render | {N}/{total} ✅ |
+| Console errors | {count} |
+
+### Plan Quality
+
+| Check | Result |
+|-------|--------|
+| All tasks have validation | ✅/❌ |
+| No placeholders | ✅/❌ |
+| Code snippets match source | ✅/⚠️ |
+| Acceptance criteria testable | ✅/❌ |
+
+### Issues Found
+
+| # | Severity | Issue | Action |
+|---|----------|-------|--------|
+| 1 | {HIGH/MED/LOW} | {description} | {fix needed} |
+
+### Status: {VERIFIED / BLOCKED / NEEDS FIXES}
+
+{VERIFIED: "Plan is ready for `/prp:prp-implement`"}
+{BLOCKED: "{N} blocking issues must be resolved first"}
+{NEEDS FIXES: "Address {N} issues for higher implementation confidence"}
+```
+
+**PHASE_7_CHECKPOINT:**
+
+- [ ] All static checks passed
+- [ ] Runtime checks passed (if applicable)
+- [ ] Plan quality checks passed
+- [ ] Verification report appended to plan
+- [ ] Status determined
+</verify>
+
 <success_criteria>
 **CONTEXT_COMPLETE**: All patterns, gotchas, integration points documented from actual codebase via `prp:codebase-explorer` and `prp:codebase-analyst` agents
 **IMPLEMENTATION_READY**: Tasks executable top-to-bottom without questions, research, or clarification
@@ -799,4 +968,5 @@ To start parallel work: Implement in small commits, pull frequently, use feature
 **VALIDATION_DEFINED**: Every task has executable verification command
 **UX_DOCUMENTED**: Before/After transformation is visually clear with data flows
 **ONE_PASS_TARGET**: Confidence score 8+ indicates high likelihood of first-attempt success
+**VERIFIED**: Plan checked against real files, running app, and pattern accuracy
 </success_criteria>
