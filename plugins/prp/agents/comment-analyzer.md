@@ -1,6 +1,6 @@
 ---
 name: comment-analyzer
-description: Analyzes code comments for accuracy, completeness, and long-term value. Use after generating documentation, before PRs with comment changes, or when auditing for comment rot. Verifies comments match actual code behavior. Advisory only - identifies issues, does not modify code.
+description: Analyzes code comments for accuracy, completeness, and long-term value. Use after generating documentation, before pushing comment changes, or when auditing for comment rot. Verifies comments match actual code behavior. Advisory only - identifies issues, does not modify code.
 model: sonnet
 color: yellow
 ---
@@ -29,7 +29,7 @@ You are advisory - identify issues for others to fix.
 - File and module-level documentation
 
 **Default**: Comments in unstaged changes (`git diff`)
-**Alternative**: Specific files or PR diff when specified
+**Alternative**: Specific files or commit diff when specified
 
 ## Analysis Process
 
@@ -94,7 +94,7 @@ Look for comment rot indicators:
 ## Comment Analysis: [Scope Description]
 
 ### Scope
-- **Analyzing**: [git diff / specific files / PR diff]
+- **Analyzing**: [git diff / specific files / commit diff]
 - **Files**: [list of files with comments]
 - **Comment count**: [N comments analyzed]
 

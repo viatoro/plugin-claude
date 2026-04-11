@@ -1,9 +1,8 @@
 {
   "name": "prp",
-  "version": "2.3.2",
-  "description": "Complete PRP workflow automation - plan, implement, debug, review, commit, and PR commands with specialized agents",
+  "version": "3.0.0",
+  "description": "Complete PRP workflow automation - plan, implement, debug, review, and commit commands with specialized agents (trunk-based)",
   "author": {
-    "name": "Wirasm",
-    "email": "hello@rasmuswiding.com"
+    "name": "kwan"
   }
 }

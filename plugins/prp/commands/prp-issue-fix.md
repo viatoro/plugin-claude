@@ -1,5 +1,5 @@
 ---
-description: Implement a fix from investigation artifact - code changes, PR, and self-review
+description: Implement a fix from investigation artifact - code changes, commit, and self-review
 argument-hint: <issue-number|artifact-path>
 ---
 
@@ -17,7 +17,7 @@ Execute the implementation plan from `/prp:prp-issue-investigate`:
 2. Ensure git state is correct
 3. Implement the changes exactly as specified
 4. Run validation
-5. Create PR linked to issue
+5. Commit and push to main
 6. Run self-review and post findings
 7. Archive the artifact
 
@@ -222,7 +222,7 @@ For each step in the artifact's Implementation Plan:
 If you must deviate from the artifact:
 
 - Note what changed and why
-- Include in PR description
+- Include in commit message
 
 **PHASE_4_CHECKPOINT:**
 
@@ -260,7 +260,7 @@ If failures:
 1. Analyze what's wrong
 2. Fix the issue
 3. Re-run validation
-4. Note any fixes in PR description
+4. Note any fixes in commit message
 
 ### 5.3 Manual Verification (if specified)
 
@@ -275,16 +275,16 @@ Execute any manual verification steps from the artifact.
 
 ---
 
-## Phase 6: COMMIT - Save Changes
+## Phase 6: COMMIT AND PUSH - Save and Ship
 
-### 6.1 Stage Changes
+### 6.1 Stage and Review
 
 ```bash
 git add -A
 git status  # Review what's being committed
 ```
 
-### 6.2 Write Commit Message
+### 6.2 Commit with Descriptive Message
 
 **Format:**
 
@@ -318,74 +318,30 @@ EOF
 )"
 ```
 
-**PHASE_6_CHECKPOINT:**
-
-- [ ] All changes committed
-- [ ] Commit message references issue
-
----
-
-## Phase 7: COMMIT - Commit and Push to Main
-
-### 7.1 Commit Changes
-
-**Format:**
-
-```
-Fix: {brief description} (#{issue-number})
-
-{Problem statement from artifact - 1-2 sentences}
-
-Changes:
-- {Change 1 from artifact}
-- {Change 2 from artifact}
-- Added test for {case}
-
-Fixes #{issue-number}
-```
-
-**Commit:**
-
-```bash
-git add -A
-git commit -m "$(cat <<'EOF'
-Fix: {title} (#{number})
-
-{problem statement}
-
-Changes:
-- {change 1}
-- {change 2}
-
-Fixes #{number}
-EOF
-)"
-```
-
-### 7.2 Push to Main
+### 6.3 Push to Main
 
 ```bash
 git push origin main
 ```
 
-### 7.3 Verify Push
+### 6.4 Verify Push
 
 ```bash
 git log origin/main..HEAD
 # Should be empty - all commits pushed
 ```
 
-**PHASE_7_CHECKPOINT:**
+**PHASE_6_CHECKPOINT:**
 
-- [ ] Changes committed to main
+- [ ] All changes committed to main
 - [ ] Commit message references issue with "Fixes #{number}"
 - [ ] Pushed to origin/main
 
 ---
 
-## Phase 8: REVIEW - Self Code Review (Optional)
+## Phase 7: REVIEW - Self Code Review (Optional)
 
-### 8.1 Run Code Review
+### 7.1 Run Code Review
 
 Use Task tool with subagent_type="prp:code-reviewer" to review the changes:
 
@@ -403,7 +359,7 @@ Focus on:
 Review only the diff, not the entire codebase.
 ```
 
-### 8.2 Document Review Findings
+### 7.2 Document Review Findings
 
 Save review to `.claude/PRPs/reviews/issue-{number}-review.md`:
 
@@ -438,23 +394,23 @@ Save review to `.claude/PRPs/reviews/issue-{number}-review.md`:
 - [x] No obvious bugs introduced
 ```
 
-**PHASE_8_CHECKPOINT:**
+**PHASE_7_CHECKPOINT:**
 
 - [ ] Code review completed (optional)
 - [ ] Review documented if performed
 
 ---
 
-## Phase 9: ARCHIVE - Clean Up
+## Phase 8: ARCHIVE - Clean Up
 
-### 9.1 Move Artifact to Completed
+### 8.1 Move Artifact to Completed
 
 ```bash
 mkdir -p .claude/PRPs/issues/completed
 mv .claude/PRPs/issues/issue-{number}.md .claude/PRPs/issues/completed/
 ```
 
-### 9.2 Commit and Push Archive
+### 8.2 Commit and Push Archive
 
 ```bash
 git add .claude/PRPs/issues/
@@ -462,14 +418,14 @@ git commit -m "Archive investigation for issue #{number}"
 git push
 ```
 
-**PHASE_9_CHECKPOINT:**
+**PHASE_8_CHECKPOINT:**
 
 - [ ] Artifact moved to completed folder
 - [ ] Archive committed and pushed
 
 ---
 
-## Phase 10: REPORT - Output to User
+## Phase 9: REPORT - Output to User
 
 ```markdown
 ## Implementation Complete
@@ -523,7 +479,7 @@ git push
 - Debug the failure
 - Fix the code (not the test, unless test is wrong)
 - Re-run validation
-- Note the additional fix in PR
+- Note the additional fix in commit message
 
 ### Merge conflicts during sync
 

@@ -69,7 +69,7 @@ git commit -m "{type}: {description}"
 **Committed**: {hash} - {message}
 **Files**: {count} files (+{add}/-{del})
 
-Next: `git push` or `/prp:prp-pr`
+Next: `git push origin main`
 ```
 
 ---

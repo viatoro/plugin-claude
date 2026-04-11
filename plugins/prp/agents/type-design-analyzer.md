@@ -247,10 +247,10 @@ For each suggestion, consider:
 
 ## For Multiple Types
 
-When analyzing multiple types in a PR:
+When analyzing multiple types in a changeset:
 
 ```markdown
-## Type Analysis Summary: [PR/Scope]
+## Type Analysis Summary: [Scope]
 
 ### Types Analyzed
 

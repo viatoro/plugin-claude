@@ -136,13 +136,13 @@ ls .claude/PRPs/issues/completed/ 2>/dev/null
 3. Note documented deviations - these are INTENTIONAL, not issues
 
 **If no implementation report:**
-- PR may not have been created via `/prp:prp-implement`
+- Changes may not have been created via `/prp:prp-implement`
 - Review normally without plan context
 - Note in review that no implementation report was found
 
-### 2.3 Understand PR Intent
+### 2.3 Understand Change Intent
 
-From PR title, description, AND implementation report (if available):
+From commit message(s) AND implementation report (if available):
 - What problem does this solve?
 - What approach was taken?
 - Are there notes from the author?
@@ -158,7 +158,7 @@ For each changed file, determine:
 **PHASE_2_CHECKPOINT:**
 - [ ] Project rules read and understood
 - [ ] Implementation artifacts located (if any)
-- [ ] PR intent understood
+- [ ] Change intent understood
 - [ ] Changed files categorized
 
 ---
@@ -178,7 +178,7 @@ For each file in the diff:
 **For EVERY changed file, check:**
 
 #### Correctness
-- [ ] Does the code do what the PR claims?
+- [ ] Does the code do what the commit message claims?
 - [ ] Are there logic errors?
 - [ ] Are edge cases handled?
 - [ ] Is error handling appropriate?
@@ -230,7 +230,7 @@ If a deviation from expected patterns is documented in the implementation report
 | Level | Icon | Criteria | Examples |
 |-------|------|----------|----------|
 | Critical | `RED` | Blocking - must fix | Security vulnerabilities, data loss potential, crashes |
-| High | `ORANGE` | Should fix before merge | Type safety violations, missing error handling, logic errors |
+| High | `ORANGE` | Should fix in follow-up commit | Type safety violations, missing error handling, logic errors |
 | Medium | `YELLOW` | Should consider | Pattern inconsistencies, missing edge cases, undocumented deviations |
 | Low | `BLUE` | Suggestions | Style preferences, minor optimizations, documentation |
 
@@ -304,15 +304,15 @@ npm test -- {relevant-test-pattern}
 - No critical or high issues
 - All validation passes
 - Code follows patterns
-- Changes match PR intent
+- Changes match commit intent
 
-**REQUEST CHANGES** if:
+**NEEDS FOLLOW-UP** if:
 - High priority issues exist
 - Validation fails but is fixable
 - Pattern violations that need addressing
 - Missing tests for new functionality
 
-**BLOCK** if:
+**CRITICAL - CONSIDER REVERT** if:
 - Critical security or data issues
 - Fundamental approach is wrong
 - Major architectural concerns
@@ -322,10 +322,9 @@ npm test -- {relevant-test-pattern}
 
 | Situation | Handling |
 |-----------|----------|
-| Draft PR | Comment only, no approve/block |
-| Large PR (>500 lines) | Note thoroughness limits, suggest splitting |
+| Large changeset (>500 lines) | Note thoroughness limits, suggest smaller commits |
 | Security-sensitive | Extra scrutiny, err on caution |
-| Missing tests | Strong recommendation, may not block |
+| Missing tests | Strong recommendation for follow-up commit |
 
 **PHASE_5_CHECKPOINT:**
 - [ ] Recommendation determined
@@ -343,28 +342,28 @@ mkdir -p .claude/PRPs/reviews
 
 ### 6.2 Generate Report File
 
-**Path**: `.claude/PRPs/reviews/pr-{NUMBER}-review.md`
+**Path**: `.claude/PRPs/reviews/commit-{SHORT_HASH}-review.md`
 
 ```markdown
 ---
-pr: {NUMBER}
-title: "{TITLE}"
+commit: {HASH}
+title: "{COMMIT_MESSAGE}"
 author: "{AUTHOR}"
 reviewed: {ISO_TIMESTAMP}
-recommendation: {approve|request-changes|block}
+recommendation: {clean|needs-follow-up|critical}
 ---
 
-# PR Review: #{NUMBER} - {TITLE}
+# Commit Review: {SHORT_HASH} - {COMMIT_MESSAGE}
 
 **Author**: @{author}
-**Branch**: {head} -> {base}
+**Branch**: main
 **Files Changed**: {count} (+{additions}/-{deletions})
 
 ---
 
 ## Summary
 
-{2-3 sentences: What this PR does and overall assessment}
+{2-3 sentences: What this commit does and overall assessment}
 
 ---
 
@@ -398,7 +397,7 @@ recommendation: {approve|request-changes|block}
   - **Fix**: {Specific recommendation}
 
 ### High Priority
-{Issues that should be fixed before merge}
+{Issues that should be fixed in a follow-up commit}
 
 ### Medium Priority
 {Issues worth addressing but not blocking}
@@ -547,10 +546,10 @@ ls -la .claude/PRPs/reviews/
 
 ## Success Criteria
 
-- **CONTEXT_GATHERED**: PR metadata, diff, and implementation artifacts reviewed
+- **CONTEXT_GATHERED**: Commit metadata, diff, and implementation artifacts reviewed
 - **CODE_REVIEWED**: All changed files analyzed against checklist
 - **VALIDATION_RUN**: All automated checks executed
 - **ISSUES_CATEGORIZED**: Findings organized by severity
 - **REPORT_GENERATED**: Comprehensive review saved locally
-- **PR_UPDATED**: Review/comment posted to GitHub
-- **RECOMMENDATION_CLEAR**: Approve/request-changes/block with rationale
+- **REVIEW_SAVED**: Review report saved locally
+- **RECOMMENDATION_CLEAR**: Clean/needs-follow-up/critical with rationale

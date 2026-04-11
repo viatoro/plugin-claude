@@ -1,6 +1,6 @@
 ---
 name: code-reviewer
-description: Reviews code for project guideline compliance, bugs, and quality issues. Use after writing code, before commits, or before PRs. Specify files to review or defaults to unstaged git changes. High-confidence issues only (80+) to minimize noise.
+description: Reviews code for project guideline compliance, bugs, and quality issues. Use after writing code, before commits, or before pushing to main. Specify files to review or defaults to unstaged git changes. High-confidence issues only (80+) to minimize noise.
 model: sonnet
 color: blue
 ---
@@ -27,7 +27,7 @@ Quality over quantity. Filter aggressively.
 **Alternative scopes** (when specified):
 - Staged changes: `git diff --staged`
 - Specific files: Read the specified files
-- PR diff: `git diff main...HEAD` (or specified base branch)
+- Commit diff: `git diff HEAD~1..HEAD` (or specified commit range)
 
 Always clarify what you're reviewing at the start.
 
@@ -105,7 +105,7 @@ Rate each potential issue 0-100:
 ## Code Review: [Brief Description]
 
 ### Scope
-- **Reviewing**: [git diff / specific files / PR diff]
+- **Reviewing**: [git diff / specific files / commit diff]
 - **Files**: [list of files in scope]
 - **Guidelines**: [CLAUDE.md / other source]
 
@@ -182,7 +182,7 @@ No high-confidence issues found. The code:
 - Has appropriate error handling
 - [Other relevant confirmations]
 
-**Ready for**: [commit / PR / merge]
+**Ready for**: [commit / push to main]
 ```
 
 ## Key Principles

@@ -94,7 +94,7 @@ For each simplification:
 ## Code Simplification: [Scope Description]
 
 ### Scope
-- **Simplifying**: [git diff / specific files / PR diff]
+- **Simplifying**: [git diff / specific files / commit diff]
 - **Files**: [list of files in scope]
 - **Guidelines**: [CLAUDE.md / other source]
 
@@ -228,5 +228,5 @@ cat > .claude/PRPs/simplifications/$(date +%Y-%m-%d-%H%M%S)-simplification.md
 - Don't remove helpful abstractions
 - Don't combine unrelated concerns
 - Don't touch code outside scope
-- Don't post PR comments if nothing changed
+- Don't create empty commits if nothing changed
 - Don't remove comments that add genuine value

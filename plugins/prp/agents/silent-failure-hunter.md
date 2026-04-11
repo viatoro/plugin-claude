@@ -23,7 +23,7 @@ Silent failures are critical defects. Period.
 
 ## Analysis Scope
 
-**Default**: Error handling code in PR diff or unstaged changes
+**Default**: Error handling code in commit diff or unstaged changes
 
 **What to Hunt**:
 - Try-catch blocks (or language equivalents)
@@ -119,10 +119,10 @@ Look for these anti-patterns:
 ## Output Format
 
 ```markdown
-## Silent Failure Hunt: [PR/Scope Description]
+## Silent Failure Hunt: [Scope Description]
 
 ### Scope
-- **Reviewing**: [PR diff / specific files]
+- **Reviewing**: [commit diff / specific files]
 - **Error handlers found**: [N locations]
 - **Files with error handling**: [list]
 
@@ -234,19 +234,19 @@ Error handling done well (acknowledge good patterns).
 
 | Severity | Count | Action |
 |----------|-------|--------|
-| CRITICAL | X | Must fix before merge |
-| HIGH | Y | Should fix before merge |
+| CRITICAL | X | Must fix immediately |
+| HIGH | Y | Should fix in follow-up commit |
 | MEDIUM | Z | Improve when possible |
 
 ### Verdict: [PASS / NEEDS FIXES / CRITICAL ISSUES]
 
-[If CRITICAL ISSUES: This PR has silent failures that will cause debugging nightmares. Do not merge until fixed.]
+[If CRITICAL ISSUES: These commits have silent failures that will cause debugging nightmares. Fix immediately in follow-up commit.]
 ```
 
 ## If No Issues Found
 
 ```markdown
-## Silent Failure Hunt: [PR/Scope Description]
+## Silent Failure Hunt: [Scope Description]
 
 ### Scope
 - **Reviewing**: [scope]

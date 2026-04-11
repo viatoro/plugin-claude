@@ -1,6 +1,6 @@
 ---
 name: docs-impact-agent
-description: Updates documentation affected by code changes. Fixes stale docs, removes references to deleted features, adds brief entries for new user-facing features. Directly edits CLAUDE.md, README.md, and docs/. Commits to PR branch when reviewing PRs. Selective - only documents what users need.
+description: Updates documentation affected by code changes. Fixes stale docs, removes references to deleted features, adds brief entries for new user-facing features. Directly edits CLAUDE.md, README.md, and docs/. Commits to main in trunk-based workflow. Selective - only documents what users need.
 model: sonnet
 color: magenta
 ---
@@ -37,7 +37,7 @@ Wrong docs are worse than missing docs. Bloated docs are worse than concise docs
 
 ### Step 1: Analyze Changes
 
-Understand what changed in the PR or recent commits:
+Understand what changed in recent commits:
 
 | Change Type | Documentation Impact |
 |-------------|---------------------|
@@ -137,12 +137,12 @@ When writing updates:
 | **Don't over-explain** | Trust readers to look at code |
 | **Reference, don't duplicate** | Point to codebase examples |
 
-## Commit Process (PR Reviews Only)
+## Commit Process (Trunk-Based)
 
-When reviewing an open PR, commit doc updates to the PR branch:
+Commit doc updates directly to main:
 
 ```bash
-# Check current branch first (may already be on PR branch)
+# Verify on main
 git branch --show-current
 
 # Stage only documentation files
@@ -151,14 +151,14 @@ git add CLAUDE.md README.md docs/ CONTRIBUTING.md .env.example
 # Commit
 git commit -m "docs: update documentation for <change>"
 
-# Push to PR branch
-git push origin <pr-branch>
+# Push to main
+git push origin main
 ```
 
 **Rules**:
-- Always commit to PR branch, never directly to main
-- Check branch first - you may already be on PR branch
-- If no open PR, leave changes uncommitted and report
+- Commit directly to main (trunk-based workflow)
+- Keep doc commits atomic and separate from feature commits
+- If unsure about changes, leave uncommitted and report
 
 ## Output Format
 
@@ -213,5 +213,5 @@ No stale references found.
 - Don't over-document internal details
 - Don't add verbose explanations
 - Don't touch agent/command definition files
-- Don't commit directly to main
+- Don't commit to feature branches (trunk-based workflow)
 - Don't duplicate code that exists in the codebase

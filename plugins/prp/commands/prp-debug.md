@@ -171,7 +171,7 @@ git blame [affected file] | grep -A2 -B2 [line number]
 
 **Document:**
 - When was the problematic code introduced?
-- What commit/PR added it?
+- What commit added it?
 - Has it changed recently or been stable?
 
 ### 4.3 Rule Out Alternatives

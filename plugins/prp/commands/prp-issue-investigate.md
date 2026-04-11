@@ -106,7 +106,7 @@ Each assessment requires a **one-sentence reasoning** explaining WHY you chose t
 - [ ] Severity (bug) or Priority (other) assessed with reasoning
 - [ ] Complexity assessed with reasoning (after Phase 2)
 - [ ] Confidence assessed with reasoning (after Phase 3)
-- [ ] If GH issue: confirmed it's open and not already has PR
+- [ ] If GH issue: confirmed it's open and not already fixed
 
 ---
 
@@ -595,9 +595,9 @@ Run `/prp:prp-issue-fix {number}` to execute the plan.
 - Report: "Issue #{number} is already closed"
 - Still create artifact if user wants analysis
 
-### Issue already has linked PR
+### Issue already has a fix committed
 
-- Warn: "PR #{pr} already addresses this issue"
+- Warn: "A fix for this issue has already been committed"
 - Ask if user wants to continue anyway
 
 ### Can't determine root cause

@@ -23,14 +23,14 @@ This plugin provides a comprehensive workflow for creating, executing, and shipp
 | `/prp:prp-issue-investigate` | Analyze GitHub issue, create implementation plan |
 | `/prp:prp-issue-fix` | Execute fix from investigation artifact |
 
-### Git & Review
+### Git & Review (Trunk-Based)
 
 | Command | Description |
 |---------|-------------|
 | `/prp:prp-commit` | Smart commit with natural language file targeting |
-| `/prp:prp-pr` | Create PR with template support |
-| `/prp:prp-review` | Comprehensive PR code review |
-| `/prp:prp-review-agents` | Multi-agent PR review (comments, tests, errors, types, code, docs, simplify) |
+| `/prp:prp-push` | Validate and push to main (quality gate) |
+| `/prp:prp-review` | Comprehensive commit code review |
+| `/prp:prp-review-agents` | Multi-agent commit review (comments, tests, errors, types, code, docs, simplify) |
 
 ## Agents
 
@@ -50,7 +50,7 @@ Specialized agents for code analysis and review workflows.
 |-------|-------------|
 | `code-reviewer` | Project guidelines, bugs, type/module checks |
 | `comment-analyzer` | Comment accuracy and maintainability |
-| `pr-test-analyzer` | Test coverage quality and gaps |
+| `test-analyzer` | Test coverage quality and gaps |
 | `silent-failure-hunter` | Error handling and silent failures |
 | `type-design-analyzer` | Type encapsulation and invariants |
 | `code-simplifier` | Clarity and maintainability improvements |
@@ -61,13 +61,16 @@ Specialized agents for code analysis and review workflows.
 Agents are invoked automatically by `/prp:prp-review-agents` or manually via Task tool:
 
 ```
-/prp:prp-review-agents 123              # Full review of PR #123
-/prp:prp-review-agents 123 tests errors # Specific aspects only
+/prp:prp-review-agents                  # Full review of last commit
+/prp:prp-review-agents abc123f          # Review specific commit
+/prp:prp-review-agents HEAD~3..HEAD tests errors # Specific aspects only
 ```
 
-## Workflow
+## Workflow (Trunk-Based)
 
-### Large Features: PRD → Plan → Implement
+All work happens directly on main. No feature branches or PRs.
+
+### Large Features: PRD → Plan → Implement → Review → Push
 
 ```
 /prp:prp-prd "user authentication system"
@@ -80,7 +83,11 @@ Auto-selects next pending phase, creates plan
     ↓
 /prp:prp-implement .claude/PRPs/plans/user-auth-phase-1.plan.md
     ↓
-Executes plan, updates PRD progress, archives plan
+Executes plan on main, commits, archives plan
+    ↓
+/prp:prp-review-agents        # Optional: review before pushing
+    ↓
+/prp:prp-push                 # Validate and push to main
     ↓
 Repeat /prp:prp-plan for next phase
 ```
@@ -91,6 +98,8 @@ Repeat /prp:prp-plan for next phase
 /prp:prp-plan "add pagination to the API"
     ↓
 /prp:prp-implement .claude/PRPs/plans/add-pagination.plan.md
+    ↓
+/prp:prp-push                 # Validate and push
 ```
 
 ### Bug Fixes: Issue Workflow
@@ -99,7 +108,26 @@ Repeat /prp:prp-plan for next phase
 /prp:prp-issue-investigate 123
     ↓
 /prp:prp-issue-fix 123
+    ↓
+Commits and pushes fix directly to main
 ```
+
+### Code Review: Pre-Push or Post-Commit
+
+```
+/prp:prp-review              # Review last commit
+/prp:prp-review-agents       # Multi-agent review of last commit
+    ↓
+Fix issues in follow-up commits
+    ↓
+/prp:prp-push                # Validate and push
+```
+
+### Quality Gates
+
+The pre-push hook automatically runs type-check, lint, and tests before any `git push` to main. This replaces PR review as the automated quality gate.
+
+To bypass in emergencies: `SKIP_PRE_PUSH=1 git push`
 
 ## Installation
 
@@ -107,7 +135,7 @@ Repeat /prp:prp-plan for next phase
 
 ```bash
 # Add marketplace from GitHub
-/plugin marketplace add Wirasm/PRPs-agentic-eng
+/plugin marketplace add viatoro/plugin-claude
 
 # Install plugin
 /plugin install prp-core@prp-marketplace
@@ -139,7 +167,7 @@ Add to your project's `.claude/settings.json`:
 {
   "extraKnownMarketplaces": {
     "prp-marketplace": {
-      "source": "Wirasm/PRPs-agentic-eng"
+      "source": "viatoro/plugin-claude"
     }
   },
   "enabledPlugins": [
@@ -160,7 +188,7 @@ All artifacts are stored in `.claude/PRPs/`:
 ├── reports/           # Implementation reports
 ├── issues/            # Issue investigation artifacts
 │   └── completed/     # Archived completed investigations
-└── reviews/           # PR review reports
+└── reviews/           # Code review reports
 ```
 
 ## PRD Phases
@@ -201,7 +229,7 @@ A PRP is a comprehensive implementation document containing:
 
 - Claude Code installed
 - Git configured
-- GitHub CLI (`gh`) for PR creation
+- GitHub CLI (`gh`) for issue management
 
 ## Troubleshooting
 
@@ -228,5 +256,5 @@ MIT License
 
 ## Support
 
-- **Issues**: https://github.com/Wirasm/PRPs-agentic-eng/issues
-- **Documentation**: https://github.com/Wirasm/PRPs-agentic-eng
+- **Issues**: https://github.com/viatoro/plugin-claude/issues
+- **Documentation**: https://github.com/viatoro/plugin-claude
