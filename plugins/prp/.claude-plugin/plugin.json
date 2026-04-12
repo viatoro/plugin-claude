@@ -1,7 +1,7 @@
 {
   "name": "prp",
-  "version": "3.0.0",
-  "description": "Complete PRP workflow automation - plan, implement, debug, review, and commit commands with specialized agents (trunk-based)",
+  "version": "3.1.0",
+  "description": "Complete PRP workflow automation - plan, implement, verify, debug, review, E2E testing, and commit commands with specialized agents (trunk-based)",
   "author": {
     "name": "kwan"
   }

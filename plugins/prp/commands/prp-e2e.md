@@ -114,19 +114,25 @@ Read the relevant source files to understand:
 
 ## Phase 2: GENERATE - Write the Test
 
-### 2.1 Create Test File
+### 2.1 Create File Structure (Page Object Model)
 
-**Path**: `e2e/flows/{flow-name}.spec.ts`
+```
+e2e/
+├── tests/{flow-name}.spec.ts      # Test spec (short, readable)
+├── pages/{page-name}.page.ts      # Page selectors + interactions
+├── actions/{domain}.actions.ts    # Multi-page business flows
+└── fixtures/test.fixture.ts       # Auth + page/action injection
+```
 
 ### 2.2 Structure
 
-Every generated test must include:
+Generate in this order:
 
-1. **Imports** — framework imports + helpers
-2. **describe block** — named after the user flow
-3. **beforeEach** — auth/seed setup
-4. **Multi-action test(s)** — the full user journey
-5. **afterEach** — cleanup (if needed)
+1. **Pages** — one per UI page involved (selectors + single-page actions)
+2. **Actions** — reusable business flows combining multiple pages
+3. **Fixtures** — extend base test with pages/actions/auth
+4. **Test spec** — short, reads like a user story
+5. **cleanup** — afterEach via API if data created
 
 ### 2.3 Multi-Action Pattern
 
@@ -162,20 +168,25 @@ Action 5: Cleanup / Delete
 - Test implementation details (internal state, store)
 - Hardcode environment-specific URLs
 
-### 2.5 Helper Creation
-
-If auth or common setup is needed, create helpers:
+### 2.5 File Creation Order
 
 ```bash
-ls e2e/support/ 2>/dev/null || mkdir -p e2e/support
+mkdir -p e2e/tests e2e/pages e2e/actions e2e/fixtures
 ```
+
+1. Create `e2e/pages/*.page.ts` — one per page, selectors only
+2. Create `e2e/actions/*.actions.ts` — combine pages into flows
+3. Create `e2e/fixtures/test.fixture.ts` — inject pages/actions/auth
+4. Create `e2e/tests/{flow-name}.spec.ts` — short test using fixtures
 
 **PHASE_2_CHECKPOINT:**
 
-- [ ] Test file created
-- [ ] Multi-action flows implemented
-- [ ] Selectors match actual source code
-- [ ] Setup/cleanup included
+- [ ] Page objects created (selectors from actual source)
+- [ ] Actions created (reusable business flows)
+- [ ] Fixture extends base test with pages/actions
+- [ ] Test spec is short — reads like a user story
+- [ ] No selectors in test spec (all in pages)
+- [ ] Setup/cleanup via API (not UI)
 
 ---
 
